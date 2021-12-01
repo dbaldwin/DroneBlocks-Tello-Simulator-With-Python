@@ -24,3 +24,10 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6"
 )
+
+# python3 -m venv venv
+# source venv/bin/activate
+# python -m pip install --upgrade build
+# python -m build
+# python -m pip install --upgrade twine
+# python -m twine upload --repository testpypi dist/*
