@@ -22,6 +22,7 @@ setuptools.setup(
     ],
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
+    install_requires=['paho-mqtt>=1.6.1'],
     python_requires=">=3.6"
 )
 
@@ -30,4 +31,4 @@ setuptools.setup(
 # python -m pip install --upgrade build
 # python -m build
 # python -m pip install --upgrade twine
-# python -m twine upload --repository testpypi dist/*
+# python -m twine upload dist/*
