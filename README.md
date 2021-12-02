@@ -70,7 +70,7 @@ Once connected you'll run the exact same code above with two small difference. W
 import asyncio
 from DroneBlocksTelloSimulator import Tello
 
-async def main():
+async def mission():
     drone = Tello()
     await drone.connect()
     await drone.takeoff()
