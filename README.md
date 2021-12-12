@@ -29,18 +29,19 @@ Now install the DroneBlocksTelloSimulator Python package:
 ```
 pip install DroneBlocksTelloSimulator
 ```
-Installation is done! Now you need to create your first mission with the DroneBlocks Simulator. You'll need a "key" so that your Python code knows where to communicate with the simulator. Access the following url:
+Installation is done! Now you need to create your first mission with the DroneBlocks Simulator. You can access the simulator at the link below:
 
 [DroneBlocks Simulator Link](http://db-simulator-dev.web.app/)
 
-Open the browser console and look for your unique key. It will say something like:
-```
-Your unique DroneBlocks simulator key is: 8529804e-15a4-4b29-b614-83fbfe24a8e1
-```
+You will need configure Chrome to "Allow Insecure Content" for the simulator. **This is not a security risk and will only be done for this domain.** This will allow the DroneBlocks simulator to receive commands from Python. Follow these steps:
 
-Make note of this unique key as it will be used in your mission code below.
+1. Click on the lock icon next to the web address
+2. Click on "Site settings"
+3. Scroll to the bottom and look for "Insecure content"
+4. Change "Block" to "Allow"
+5. Close the tab and refresh the simulator
 
-Talk about allowing insecure content for Chrome.
+You can now move onto programming your first simulated drone mission in Python! Click the button in the top left of the DroneBlocks simulator that says "Get Drone Simulator Key". Copy this unique key to your clipboard as it will be used in your mission code below.
 
 Create a simulated mission using the following code:
 
@@ -49,7 +50,7 @@ import asyncio
 from DroneBlocksTelloSimulator import SimulatedDrone
 
 async def mission():
-    drone = SimulatedDrone('a5f921f4-f2f0-446d-b216-1a4e34ab4fa0')
+    drone = SimulatedDrone('YOUR-SIMULATED-DRONE-KEY-GOES-HERE')
     await drone.connect()
     await drone.takeoff()
     await drone.fly_forward(100, 'in')
@@ -62,7 +63,7 @@ async def mission():
 asyncio.run(mission())
 ```
 
-Congrats! Your first simulated mission! Now let's run the exact same code on a real Tello. We're assuming you know how to connect to Tello from your computer so go ahead and do that.
+Congrats on your first simulated mission! Now let's run the exact same code on a real Tello. We're assuming you know how to connect to Tello from your computer so go ahead and do that.
 
 Once connected you'll run the exact same code above with two small difference. We're using a different import and constructor necessary to interface with the Tello drone.
 
