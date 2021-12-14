@@ -395,19 +395,19 @@ class Tello:
         address = address_schema.format(ip=self.VS_UDP_IP, port=self.VS_UDP_PORT)
         return address
 
-    def get_frame_read(self) -> 'BackgroundFrameRead':
-        """Get the BackgroundFrameRead object from the camera drone. Then, you just need to call
-        backgroundFrameRead.frame to get the actual frame received by the drone.
-        Returns:
-            BackgroundFrameRead
-        """
-        if self.background_frame_read is None:
-            address = self.get_udp_video_address()
-            self.background_frame_read = BackgroundFrameRead(self, address)
-            self.background_frame_read.start()
-        return self.background_frame_read
+    # def get_frame_read(self) -> 'BackgroundFrameRead':
+    #     """Get the BackgroundFrameRead object from the camera drone. Then, you just need to call
+    #     backgroundFrameRead.frame to get the actual frame received by the drone.
+    #     Returns:
+    #         BackgroundFrameRead
+    #     """
+    #     if self.background_frame_read is None:
+    #         address = self.get_udp_video_address()
+    #         self.background_frame_read = BackgroundFrameRead(self, address)
+    #         self.background_frame_read.start()
+    #     return self.background_frame_read
 
-    async def send_command_with_return(self, command: str, timeout: int = RESPONSE_TIMEOUT) -> str:
+    def send_command_with_return(self, command: str, timeout: int = RESPONSE_TIMEOUT) -> str:
         """Send command to Tello and wait for its response.
         Internal method, you normally wouldn't call this yourself.
         Return:
@@ -456,13 +456,13 @@ class Tello:
         self.LOGGER.info("Send command (no response expected): '{}'".format(command))
         client_socket.sendto(command.encode('utf-8'), self.address)
 
-    async def send_control_command(self, command: str, timeout: int = RESPONSE_TIMEOUT) -> bool:
+    def send_control_command(self, command: str, timeout: int = RESPONSE_TIMEOUT) -> bool:
         """Send control command to Tello and wait for its response.
         Internal method, you normally wouldn't call this yourself.
         """
         response = "max retries exceeded"
         for i in range(0, self.retry_count):
-            response = await self.send_command_with_return(command, timeout=timeout)
+            response = self.send_command_with_return(command, timeout=timeout)
 
             if 'ok' in response.lower():
                 return True
@@ -514,10 +514,10 @@ class Tello:
         raise Exception("Command '{}' was unsuccessful for {} tries. Latest response:\t'{}'"
                         .format(command, tries, response))
 
-    async def connect(self, wait_for_state=True):
+    def connect(self, wait_for_state=True):
         """Enter SDK mode. Call this before any of the control functions.
         """
-        await self.send_control_command("command")
+        self.send_control_command("command")
 
         if wait_for_state:
             REPS = 20
@@ -536,33 +536,33 @@ class Tello:
         """
         self.send_control_command("keepalive")
 
-    async def turn_motor_on(self):
+    def turn_motor_on(self):
         """Turn on motors without flying (mainly for cooling)
         """
-        await self.send_control_command("motoron")
+        self.send_control_command("motoron")
 
-    async def turn_motor_off(self):
+    def turn_motor_off(self):
         """Turns off the motor cooling mode
         """
-        await self.send_control_command("motoroff")
+        self.send_control_command("motoroff")
 
-    async def initiate_throw_takeoff(self):
+    def initiate_throw_takeoff(self):
         """Allows you to take off by throwing your drone within 5 seconds of this command
         """
-        await self.send_control_command("throwfly")
+        self.send_control_command("throwfly")
 
-    async def takeoff(self):
+    def takeoff(self):
         """Automatic takeoff.
         """
         # Something it takes a looooot of time to take off and return a succesful takeoff.
         # So we better wait. Otherwise, it would give us an error on the following calls.
-        await self.send_control_command("takeoff", timeout=Tello.TAKEOFF_TIMEOUT)
+        self.send_control_command("takeoff", timeout=Tello.TAKEOFF_TIMEOUT)
         self.is_flying = True
 
-    async def land(self):
+    def land(self):
         """Automatic landing.
         """
-        await self.send_control_command("land")
+        self.send_control_command("land")
         self.is_flying = False
 
     # def streamon(self):
@@ -585,105 +585,105 @@ class Tello:
     #     self.send_control_command("streamoff")
     #     self.stream_on = False
 
-    async def emergency(self):
+    def emergency(self):
         """Stop all motors immediately.
         """
-        await self.send_control_command("emergency")
+        self.send_control_command("emergency")
 
-    async def move(self, direction: str, x: int):
+    def move(self, direction: str, x: int):
         """Tello fly up, down, left, right, forward or back with distance x cm.
         Users would normally call one of the move_x functions instead.
         Arguments:
             direction: up, down, left, right, forward or back
             x: 20-500
         """
-        await self.send_control_command("{} {}".format(direction, x))
+        self.send_control_command("{} {}".format(direction, x))
 
-    async def fly_up(self, x: int, units: str):
+    def fly_up(self, x: int, units: str):
         """Fly x cm up.
         Arguments:
             x: 20-500
         """
-        await self.move("up", x)
+        self.move("up", x)
 
-    async def fly_down(self, x: int, units: str):
+    def fly_down(self, x: int, units: str):
         """Fly x cm down.
         Arguments:
             x: 20-500
         """
-        await self.move("down", x)
+        self.move("down", x)
 
-    async def fly_left(self, x: int, units: str):
+    def fly_left(self, x: int, units: str):
         """Fly x cm left.
         Arguments:
             x: 20-500
         """
-        await self.move("left", x)
+        self.move("left", x)
 
-    async def fly_right(self, x: int, units: str):
+    def fly_right(self, x: int, units: str):
         """Fly x cm right.
         Arguments:
             x: 20-500
         """
-        await self.move("right", x)
+        self.move("right", x)
 
-    async def fly_forward(self, x: int, units: str):
+    def fly_forward(self, x: int, units: str):
         """Fly x cm forward.
         Arguments:
             x: 20-500
         """
-        await self.move("forward", x)
+        self.move("forward", x)
 
-    async def fly_backward(self, x: int, units: str):
+    def fly_backward(self, x: int, units: str):
         """Fly x cm backwards.
         Arguments:
             x: 20-500
         """
-        await self.move("back", x)
+        self.move("back", x)
 
-    async def yaw_right(self, x: int):
+    def yaw_right(self, x: int):
         """Rotate x degree clockwise.
         Arguments:
             x: 1-360
         """
-        await self.send_control_command("cw {}".format(x))
+        self.send_control_command("cw {}".format(x))
 
-    async def yaw_left(self, x: int):
+    def yaw_left(self, x: int):
         """Rotate x degree counter-clockwise.
         Arguments:
             x: 1-3600
         """
-        await self.send_control_command("ccw {}".format(x))
+        self.send_control_command("ccw {}".format(x))
 
-    async def flip(self, direction: str):
+    def flip(self, direction: str):
         """Do a flip maneuver.
         Users would normally call one of the flip_x functions instead.
         Arguments:
             direction: l (left), r (right), f (forward) or b (back)
         """
-        await self.send_control_command("flip {}".format(direction))
+        self.send_control_command("flip {}".format(direction))
 
-    async def flip_left(self):
+    def flip_left(self):
         """Flip to the left.
         """
-        await self.flip("l")
+        self.flip("l")
 
-    async def flip_right(self):
+    def flip_right(self):
         """Flip to the right.
         """
-        await self.flip("r")
+        self.flip("r")
 
-    async def flip_forward(self):
+    def flip_forward(self):
         """Flip forward.
         """
-        await self.flip("f")
+        self.flip("f")
 
-    async def flip_backward(self):
+    def flip_backward(self):
         """Flip backwards.
         """
-        await self.flip("b")
+        self.flip("b")
 
-    async def fly_to_xyz(self, x: int, y: int, z: int, units: str):
+    def fly_to_xyz(self, x: int, y: int, z: int, units: str):
         """Fly to x y z relative to the current position.
         Speed defines the traveling speed in cm/s.
         Arguments:
@@ -693,9 +693,9 @@ class Tello:
             speed: 10-100
         """
         cmd = 'go {} {} {} 50'.format(x, y, z, 50)
-        await self.send_control_command(cmd)
+        self.send_control_command(cmd)
 
-    async def fly_curve(self, x1: int, y1: int, z1: int, x2: int, y2: int, z2: int, units: str):
+    def fly_curve(self, x1: int, y1: int, z1: int, x2: int, y2: int, z2: int, units: str):
         """Fly to x2 y2 z2 in a curve via x2 y2 z2. Speed defines the traveling speed in cm/s.
 
         - Both points are relative to the current position
@@ -713,7 +713,7 @@ class Tello:
             speed: 10-60
         """
         cmd = 'curve {} {} {} {} {} {} {}'.format(x1, y1, z1, x2, y2, z2, 50)
-        await self.send_control_command(cmd)
+        self.send_control_command(cmd)
 
     # def go_xyz_speed_mid(self, x: int, y: int, z: int, speed: int, mid: int):
     #     """Fly to x y z relative to the mission pad with id mid.
@@ -784,12 +784,12 @@ class Tello:
     #     """
     #     self.send_control_command("mdirection {}".format(x))
 
-    async def set_speed(self, x: int):
+    def set_speed(self, x: int):
         """Set speed to x cm/s.
         Arguments:
             x: 10-100
         """
-        await self.send_control_command("speed {}".format(x))
+        self.send_control_command("speed {}".format(x))
 
     def send_rc_control(self, left_right_velocity: int, forward_backward_velocity: int, up_down_velocity: int,
                         yaw_velocity: int):
@@ -883,12 +883,12 @@ class Tello:
     #     cmd = 'downvision {}'.format(direction)
     #     self.send_control_command(cmd)
 
-    async def send_expansion_command(self, expansion_cmd: str):
+    def send_expansion_command(self, expansion_cmd: str):
         """Sends a command to the ESP32 expansion board connected to a Tello Talent
         Use e.g. tello.send_expansion_command("led 255 0 0") to turn the top led red.
         """
         cmd = 'EXT {}'.format(expansion_cmd)
-        await self.send_control_command(cmd)
+        self.send_control_command(cmd)
 
     # def query_speed(self) -> int:
     #     """Query speed setting (cm/s)
