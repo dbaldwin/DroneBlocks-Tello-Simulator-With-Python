@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="DroneBlocksTelloSimulator",
-    version="0.0.5",
+    version="0.0.6",
     author="Dennis Baldwin",
     author_email="db@droneblocks.io",
     description="Program a drone with the DroneBlocks Simulator and then deploy to Tello",
