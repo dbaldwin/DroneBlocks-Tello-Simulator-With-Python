@@ -46,43 +46,41 @@ You can now move onto programming your first simulated drone mission in Python! 
 Create a simulated mission using the following code:
 
 ```
-import asyncio
-from DroneBlocksTelloSimulator import SimulatedDrone
+from DroneBlocksTelloSimulator.DroneBlocksSimulatorContextManager import DroneBlocksSimulatorContextManager
 
-async def mission():
-    drone = SimulatedDrone('YOUR-SIMULATED-DRONE-KEY-GOES-HERE')
-    await drone.connect()
-    await drone.takeoff()
-    await drone.fly_forward(100, 'in')
-    await drone.fly_left(100, 'in')
-    await drone.fly_backward(100, 'in')
-    await drone.fly_right(100, 'in')
-    await drone.flip_backward()
-    await drone.land()
+if __name__ == '__main__':
 
-asyncio.run(mission())
+    sim_key = 'YOUR_SIM_KEY_GOES_HERE'
+    distance = 40
+    with DroneBlocksSimulatorContextManager(simulator_key=sim_key) as drone:
+        drone.takeoff()
+        drone.fly_forward(distance, 'in')
+        drone.fly_left(distance, 'in')
+        drone.fly_backward(distance, 'in')
+        drone.fly_right(distance, 'in')
+        drone.flip_backward()
+        drone.land()
 ```
 
 Congrats on your first simulated mission! Now let's run the exact same code on a real Tello. We're assuming you know how to connect to Tello from your computer so go ahead and do that.
 
-Once connected you'll run the exact same code above with two small difference. We're using a different import and constructor necessary to interface with the Tello drone.
+Once connected you'll run the exact same code above with one small difference. We've changed the sim_key to **None** and Python now knows to send the same commands to your real Tello, Tello EDU, or Tello Talent!
 
 ```
-import asyncio
-from DroneBlocksTelloSimulator import Tello
+from DroneBlocksTelloSimulator.DroneBlocksSimulatorContextManager import DroneBlocksSimulatorContextManager
 
-async def mission():
-    drone = Tello()
-    await drone.connect()
-    await drone.takeoff()
-    await drone.fly_forward(100, 'in')
-    await drone.fly_left(100, 'in')
-    await drone.fly_backward(100, 'in')
-    await drone.fly_right(100, 'in')
-    await drone.flip_backward()
-    await drone.land()
+if __name__ == '__main__':
 
-asyncio.run(mission())
+    sim_key = None
+    distance = 40
+    with DroneBlocksSimulatorContextManager(simulator_key=sim_key) as drone:
+        drone.takeoff()
+        drone.fly_forward(distance, 'in')
+        drone.fly_left(distance, 'in')
+        drone.fly_backward(distance, 'in')
+        drone.fly_right(distance, 'in')
+        drone.flip_backward()
+        drone.land()
 ```
 Ta-da! Now you've run the same code in both the DroneBlocks simulator and on Tello! Let's take a look at all the commands available to both the Simulator and Tello:
 
