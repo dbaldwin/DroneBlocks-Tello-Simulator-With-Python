@@ -31,7 +31,7 @@ pip install DroneBlocksTelloSimulator
 ```
 Installation is done! Now you need to create your first mission with the DroneBlocks Simulator. You can access the simulator at the link below:
 
-[DroneBlocks Simulator Link](http://db-simulator-dev.web.app/)
+[DroneBlocks Simulator Link](http://coding-sim.droneblocks.io/)
 
 You will need configure Chrome to "Allow Insecure Content" for the simulator. **This is not a security risk and will only be done for this domain.** This will allow the DroneBlocks simulator to receive commands from Python. Follow these steps:
 
