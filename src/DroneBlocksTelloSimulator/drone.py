@@ -6,7 +6,8 @@ import uuid
 class SimulatedDrone:
 
     def __init__(self, simulator_key):
-        self.client = mqtt.Client()
+        # https://eclipse.dev/paho/files/paho.mqtt.python/html/migrations.html
+        self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
         self.client.connect("159.65.187.41", 9999)
         self.simulator_key = simulator_key
         self.current_command_uuid = ""
