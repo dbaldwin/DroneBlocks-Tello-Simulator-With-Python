@@ -45,4 +45,9 @@ class DroneBlocksSimulatorContextManager():
         # land and gracefully stop the Tello
         if self.simulator_key is None:
             self.db_tello.end()
+        else:
+            # we are running in the simulator, and when we leave
+            # the 'with' block be sure to land
+            self.db_tello.land()
+
 
